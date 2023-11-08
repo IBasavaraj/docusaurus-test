@@ -10,23 +10,28 @@ function HomepageHeader() {
   const [readmeContent, setReadmeContent] = useState('');
   const {siteConfig} = useDocusaurusContext();
 
+  var myHeaders = new Headers();
+  myHeaders.append(
+    "Authorization",
+    "Bearer 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"
+  );
+  myHeaders.append("Cookie", "_octo=GH1.1.2052129370.1699438329; logged_in=no");
 
-  useEffect(() => {
+  var requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
 
-    // Replace 'username' and 'repo-name' with the GitHub repository details
-    const repoUrl = 'https://github.com/IBasavaraj/todo-react';
-const readmeEndpoint = `https://cors-anywhere.herokuapp.com/${repoUrl}/readme`;
-
-    console.log("readmeEndpoint", readmeEndpoint);
-    fetch(readmeEndpoint)
-      .then((response) => response.json())
-      .then((data) => {
-        const readme = atob(data.content); // Decode Base64 content
-        setReadmeContent(readme);
-        console.log("readme", readme);
-      })
-      .catch((error) => console.error('Error fetching README content:', error));
-  }, []);
+  fetch(
+    "https://api.github.com/repos/Yashwithajuegostudio/to-do-list/readme",
+    requestOptions
+  )
+    .then((response) => response.text())
+    .then((result) => {
+      const readme = atob(result.content);
+      setReadmeContent(readme)})
+    .catch((error) => console.log("error", error));
 
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
